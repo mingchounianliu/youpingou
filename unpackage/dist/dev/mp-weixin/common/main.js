@@ -18,7 +18,8 @@ var _requestMiniprogram = __webpack_require__(/*! @escook/request-miniprogram */
 uni.$http = _requestMiniprogram.$http;
 //请求的根路径
 // $http.baseUrl='https://www.uinav.com'
-_requestMiniprogram.$http.baseUrl = 'https://www.uinav.com';
+// $http.baseUrl = 'https://www.uinav.com'
+_requestMiniprogram.$http.baseUrl = 'https://api-hmugo-web.itheima.net';
 
 //请求拦截器
 _requestMiniprogram.$http.beforeRequest = function (options) {

@@ -90,7 +90,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "recyclableRender", function() { return recyclableRender; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "components", function() { return components; });
-var components
+var components = {
+  myGoods: function() {
+    return __webpack_require__.e(/*! import() | components/my-goods/my-goods */ "components/my-goods/my-goods").then(__webpack_require__.bind(null, /*! @/components/my-goods/my-goods.vue */ 100))
+  }
+}
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -128,7 +132,11 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(n);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};} //
+//
+//
+//
+//
 //
 //
 //
@@ -137,10 +145,75 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 var _default =
 {
   data: function data() {
-    return {};
+    return {
+      // 请求参数对象
+      queryObj: {
+        // 查询关键词
+        query: '',
+        // 商品分类Id
+        cid: '',
+        // 页码值
+        pagenum: 1,
+        // 每页显示多少条数据
+        pagesize: 10 },
+
+      goodsList: [],
+      total: 0,
+      // 是否正在请求数据
+      isloading: false };
+
+  },
+  onLoad: function onLoad(options) {
+    this.queryObj.query = options.query || '';
+    this.queryObj.cid = options.cid || '';
+
+    this.getGoodsList();
+  },
+  methods: {
+    // 调用获取商品列表数据的方法
+    getGoodsList: function getGoodsList(cb) {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var _yield$uni$$http$get, res;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+                // 打开节流阀
+                _this.isloading = true;_context.next = 3;return (
 
 
+                  uni.$http.get('/api/public/v1/goods/search', _this.queryObj));case 3:_yield$uni$$http$get = _context.sent;res = _yield$uni$$http$get.data;
+                // 关闭节流阀
+                _this.isloading = false;
+                // 只要数据请求完毕，就立即按需调用 cb 回调函数
+                cb && cb();if (!(
+                res.meta.status != 200)) {_context.next = 9;break;}return _context.abrupt("return", uni.$showMsg());case 9:
+                console.log(res.message);
+                _this.goodsList = [].concat(_toConsumableArray(_this.goodsList), _toConsumableArray(res.message.goods));
+                _this.total = res.message.total;case 12:case "end":return _context.stop();}}}, _callee);}))();
+    },
+    // 点击跳转到商品详情页面
+    gotoDetail: function gotoDetail(goods) {
+      uni.navigateTo({
+        url: '/subpkg/goods_detail/goods_detail?goods_id=' + goods.goods_id });
+
+    } },
+
+  onReachBottom: function onReachBottom() {
+    // 判断是否还有下一页数据
+    if (this.queryObj.pagenum * this.queryObj.pagesize >= this.total) return uni.$showMsg('数据加载完毕！');
+
+    // 判断是否正在请求其它数据，如果是，则不发起额外的请求
+    if (this.isloading) return;
+    // 让页码值自增 +1
+    this.queryObj.pagenum++;
+    // 重新获取列表数据
+    this.getGoodsList();
+  },
+  onPullDownRefresh: function onPullDownRefresh() {
+    //1. 重置关键数据
+    this.queryObj.pagenum = 1;
+    this.total = 0;
+    this.isloading = false;
+    this.goodsList = [];
+    // 2. 重新发起请求
+    this.getGoodsList(function () {return uni.stopPullDownRefresh();});
   } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })
 
