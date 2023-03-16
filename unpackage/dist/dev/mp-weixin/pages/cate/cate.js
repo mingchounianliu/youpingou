@@ -92,7 +92,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "recyclableRender", function() { return recyclableRender; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "components", function() { return components; });
-var components
+var components = {
+  mySearch: function() {
+    return __webpack_require__.e(/*! import() | components/my-search/my-search */ "components/my-search/my-search").then(__webpack_require__.bind(null, /*! @/components/my-search/my-search.vue */ 65))
+  }
+}
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -183,6 +187,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -201,7 +208,7 @@ var _default =
     var sysInfo = uni.getSystemInfoSync();
     console.log(sysInfo);
     // 为 wh 窗口可用高度动态赋值
-    this.wh = sysInfo.windowHeight;
+    this.wh = sysInfo.windowHeight - 50;
 
     this.getCateList();
   },
@@ -230,6 +237,12 @@ var _default =
     gotoGoodsList: function gotoGoodsList(item) {
       uni.navigateTo({
         url: '/subpkg/goods_list/goods_list?cid=' + item.cat_id });
+
+    },
+    gotoSearch: function gotoSearch() {
+      // 跳转到分包中的搜索页面
+      uni.navigateTo({
+        url: '/subpkg/search/search' });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
