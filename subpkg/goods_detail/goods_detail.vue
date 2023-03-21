@@ -42,7 +42,34 @@
 </template>
 
 <script>
+  import {
+    mapState,
+    mapMutations,
+    mapGetters
+  } from 'vuex'
   export default {
+    computed: {
+      ...mapState('m_cart', []),
+      ...mapGetters('m_cart',['total'])
+    },
+    watch:{
+      // 页面首次加载完毕后，不会调用这个侦听器
+      total:{
+        // handler 属性用来定义侦听器的 function 处理函数
+        // const findResult= this.options.find(x=>x.text==='购物车')
+        // if(findResult){
+        //   findResult.info=newVal
+        // }
+        handler(newVal){
+          const findResult= this.options.find(x=>x.text==='购物车')
+          if(findResult){
+            findResult.info=newVal
+          }
+        },
+         // immediate 属性用来声明此侦听器，是否在页面初次加载完毕后立即调用
+              immediate: true
+      }
+    },
     data() {
       return {
         //商品详情数据
@@ -54,7 +81,7 @@
         }, {
           icon: 'cart',
           text: '购物车',
-          info: 2
+          info: 0
         }],
         // 右侧按钮组的配置对象
         buttonGroup: [{
@@ -77,6 +104,7 @@
       this.getGoodsDetail(goods_id)
     },
     methods: {
+      ...mapMutations('m_cart', ['addToCart']),
       // 定义请求商品详情数据的方法
       async getGoodsDetail(goods_id) {
         const {
@@ -103,12 +131,29 @@
       },
       // 左侧按钮的点击事件处理函数
       onClick(e) {
-         console.log(e)
+        console.log(e)
         if (e.content.text === '购物车') {
           // 切换到购物车页面
           uni.switchTab({
             url: '/pages/cart/cart'
           })
+        }
+      },
+      buttonClick(e) {
+        console.log(e)
+        // 1. 判断是否点击了 加入购物车 按钮
+        if (e.content.text === '加入购物车') {
+          // 1. 判断是否点击了 加入购物车 按钮
+          const goods = {
+            goods_id: this.goods_info.goods_id, // 商品的Id
+            goods_name: this.goods_info.goods_name, // 商品的名称
+            goods_price: this.goods_info.goods_price, // 商品的价格
+            goods_count: 1, // 商品的数量
+            goods_small_logo: this.goods_info.goods_small_logo, // 商品的图片
+            goods_state: true // 商品的勾选状态
+          }
+          // 3. 通过 this 调用映射过来的 addToCart 方法，把商品信息对象存储到购物车中
+          this.addToCart(goods)
         }
       }
     }
@@ -165,12 +210,13 @@
       color: gray;
     }
   }
+
   .goods-detail-container {
     // 给页面外层的容器，添加 50px 的内padding，
     // 防止页面内容被底部的商品导航组件遮盖
     padding-bottom: 50px;
   }
-  
+
   .goods_nav {
     // 为商品导航组件添加固定定位
     position: fixed;

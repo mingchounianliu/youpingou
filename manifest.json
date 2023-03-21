@@ -49,6 +49,11 @@
             "es6" : true,
             "postcss" : true,
             "minified" : true
-        }
+        },
+        "requiredPrivateInfos": [
+          "getFuzzyLocation",
+          "choosePoi",
+          "chooseAddress"
+        ]
     }
 }
