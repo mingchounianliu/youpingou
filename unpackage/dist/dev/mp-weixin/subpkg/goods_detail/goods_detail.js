@@ -137,51 +137,78 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 22));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};} //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 22));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 12);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
+
+
+
+
 {
+  computed: _objectSpread({},
+  (0, _vuex.mapState)('m_cart', []), {},
+  (0, _vuex.mapGetters)('m_cart', ['total'])),
+
+  watch: {
+    // 页面首次加载完毕后，不会调用这个侦听器
+    total: {
+      // handler 属性用来定义侦听器的 function 处理函数
+      // const findResult= this.options.find(x=>x.text==='购物车')
+      // if(findResult){
+      //   findResult.info=newVal
+      // }
+      handler: function handler(newVal) {
+        var findResult = this.options.find(function (x) {return x.text === '购物车';});
+        if (findResult) {
+          findResult.info = newVal;
+        }
+      },
+      // immediate 属性用来声明此侦听器，是否在页面初次加载完毕后立即调用
+      immediate: true } },
+
+
   data: function data() {
     return {
       //商品详情数据
@@ -193,7 +220,7 @@ var _default =
       {
         icon: 'cart',
         text: '购物车',
-        info: 2 }],
+        info: 0 }],
 
       // 右侧按钮组的配置对象
       buttonGroup: [{
@@ -215,7 +242,8 @@ var _default =
     // 调用请求商品详情数据的方法
     this.getGoodsDetail(goods_id);
   },
-  methods: {
+  methods: _objectSpread({},
+  (0, _vuex.mapMutations)('m_cart', ['addToCart']), {
     // 定义请求商品详情数据的方法
     getGoodsDetail: function getGoodsDetail(goods_id) {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var _yield$uni$$http$get, res;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
 
@@ -249,7 +277,24 @@ var _default =
           url: '/pages/cart/cart' });
 
       }
-    } } };exports.default = _default;
+    },
+    buttonClick: function buttonClick(e) {
+      console.log(e);
+      // 1. 判断是否点击了 加入购物车 按钮
+      if (e.content.text === '加入购物车') {
+        // 1. 判断是否点击了 加入购物车 按钮
+        var goods = {
+          goods_id: this.goods_info.goods_id, // 商品的Id
+          goods_name: this.goods_info.goods_name, // 商品的名称
+          goods_price: this.goods_info.goods_price, // 商品的价格
+          goods_count: 1, // 商品的数量
+          goods_small_logo: this.goods_info.goods_small_logo, // 商品的图片
+          goods_state: true // 商品的勾选状态
+        };
+        // 3. 通过 this 调用映射过来的 addToCart 方法，把商品信息对象存储到购物车中
+        this.addToCart(goods);
+      }
+    } }) };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

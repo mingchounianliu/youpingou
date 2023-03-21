@@ -1,7 +1,7 @@
 <template>
   <view>
     <!-- 使用自定义的搜索组件 -->
-   <!-- <my-search :bgcolor="'pink'" :radius="'10'"></my-search> -->
+    <!-- <my-search :bgcolor="'pink'" :radius="'10'"></my-search> -->
     <my-search @click="gotoSearch"></my-search>
     <view class="scroll-view-container">
       <!-- 左侧的滚动视图区域 -->
@@ -32,7 +32,10 @@
 </template>
 
 <script>
+  import badgeMix from '@/mixinxs/tabbar-badge.js'
+
   export default {
+    mixins: [badgeMix],
     data() {
       return {
         //当前设备可用的高度
@@ -49,7 +52,7 @@
       const sysInfo = uni.getSystemInfoSync()
       console.log(sysInfo)
       // 为 wh 窗口可用高度动态赋值
-      this.wh = sysInfo.windowHeight-50
+      this.wh = sysInfo.windowHeight - 50
 
       this.getCateList()
     },
@@ -71,19 +74,19 @@
         this.cateLevel2 = this.cateList[i].children
 
         // 让 scrollTop 的值在 0 与 1 之间切换
-         this.scrollTop = this.scrollTop ? 0 : 0.1
-         console.log(this.scrollTop)
+        this.scrollTop = this.scrollTop ? 0 : 0.1
+        console.log(this.scrollTop)
       },
       // 点击三级分类项跳转到商品列表页面
-      gotoGoodsList(item){
-         uni.navigateTo({
-            url: '/subpkg/goods_list/goods_list?cid=' + item.cat_id
-          })
+      gotoGoodsList(item) {
+        uni.navigateTo({
+          url: '/subpkg/goods_list/goods_list?cid=' + item.cat_id
+        })
       },
-      gotoSearch(){
+      gotoSearch() {
         // 跳转到分包中的搜索页面
         uni.navigateTo({
-          url:'/subpkg/search/search'
+          url: '/subpkg/search/search'
         })
       }
     }
