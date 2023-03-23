@@ -51,14 +51,14 @@
       ...mapMutations('m_user', ['updateAddress']),
       async chooseAddress() {
         const [err, succ] = await uni.chooseAddress().catch(err => err)
-
-        if (err === null && succ.errMsg === 'chooseAddress:ok') {
+        console.log("err2",err,succ);
+        if (succ && succ.errMsg === 'chooseAddress:ok') {
           // 为 data 里面的收货地址对象赋值
           this.updateAddress(succ)
         }
-        console.log("err", err);
+        // console.log("err", err);
         // 3. 用户没有授权
-        if (err && err.errMsg === 'chooseAddress:fail auth deny' || err.errMsg === 'chooseAddress:fail authorize no response') {
+        if (err && (err.errMsg === 'chooseAddress:fail auth deny' || err.errMsg === 'chooseAddress:fail authorize no response')) {
           this.reAuth() // 调用 this.reAuth() 方法，向用户重新发起授权申请
         }
       },
